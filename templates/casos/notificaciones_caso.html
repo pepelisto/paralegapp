@@ -1,0 +1,74 @@
+{% extends 'casos/caso_detail.html' %}
+
+                    {% block tabla_caso %}
+
+                            <div class="row"><!--  botones de opciones-->
+                              <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                                        <dic class="float-left dropdown dropright box h-100 d-flex justify-content-center flex-column">
+                                            <button  type="button" class="btn btn-info float-left largo dropdown-toggle" data-toggle="dropdown">Cuaderno</button>
+                                            <div class="dropdown-menu">
+                                                {% for cuad in cuadernos %}
+                                                    <a class="dropdown-item" href="{% url 'paralegapp:detalle_caso' micaso.id cuad.numero %}">{{ cuad }}</a>
+                                                {% endfor %}
+                                            </div>
+                                        </dic>
+                                        <div class="float-left box h-100 d-flex justify-content-center flex-column">
+                                             <h5>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp Notificaciones</h5>
+                                        </div>
+                              </div>
+
+                            </div>
+                            <br>
+
+
+                            <div class="row"><!--  botones de opciones-->
+                              <div class="float-left btn-group col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12 h-50">
+                                   <a class="btn btn-info" href="{% url 'paralegapp:detalle_caso' micaso.id 1 %}">Historia</a>
+                                   <a class="btn btn-info" href="{% url 'paralegapp:litigantes_caso' micaso.id 1%}">Litigantes</a>
+                                   <a class="btn btn-info active" href="#">Notificaciones</a>
+                                   <a class="btn btn-info" href="{% url 'paralegapp:esc_caso' micaso.id 1%}">Esc.por&nbspresolv.</a>
+                                   <a class="btn btn-info" href="{% url 'paralegapp:exohortos_caso' micaso.id 1%}">Exhortos</a>
+                              </div>
+                            </div>
+                            <br>
+
+
+                            <div class="table-wrapper-scroll-y my-custom-scrollbar2">
+                                  <table class="table table-striped table-light table-hover table-bordered mb-0" data-link="row" style="line-height: 0.6">
+
+
+                                        <thead class="thead-dark sticky">
+                                            <tr>
+                                                <th>Esta.Not.</th>
+                                                <th>ROL</th>
+                                                <th>RUC</th>
+                                                <th>Fec.Tram.</th>
+                                                <th>Tip.Part</th>
+                                                <th>Nombre</th>
+                                                <th>Tramite</th>
+                                                <th>Obs.Fallida</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="myTable">
+                                            {% for li in notificaciones %}
+                                                <tr><!-- onclick="window.location.assign('http://127.0.0.1:8000/paralegapp/casos/#');"-->
+
+                                                    <td><a class="text-truncate text-dark" href="#">{{ li.est_not }}</a></td>
+                                                    <td><a class="text-truncate text-dark" href="#">{{ li.rol }}</a></td>
+                                                    <td><a class="text-truncate text-dark" href="#">{{ li.ruc }}</a></td>
+                                                    <td><a class="text-truncate text-dark" href="#">{{ li.fecha_creacion }}</a></td>
+                                                    <td><a class="text-truncate text-dark" href="#">{{ li.tip_part }}</a></td>
+                                                    <td><a class="text-truncate text-dark" href="#">{{ li.nombre }}</a></td>
+                                                    <td><a class="text-truncate text-dark" href="#">{{ li.tramite }}</a></td>
+                                                    <td><a class="text-truncate text-dark" href="#">{{ li.obs_fallido }}</a></td>
+                                                </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                  </table>
+                                  {% if X == 0 %}
+                                       <h5>Causa no tiene Notificaciones..</h5>
+                                  {% endif %}
+                            </div>
+
+
+                    {% endblock %}

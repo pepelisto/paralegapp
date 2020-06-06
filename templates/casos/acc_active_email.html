@@ -1,0 +1,12 @@
+{% autoescape off %}
+
+Bienvenido/a {{ user.first_name }} a ParalegApp , tu asistente legal virtual!
+
+Estás a un paso de comenzar a la experiencia ParalegApp
+
+Por favor haz click en el link para confirmar tu correo electrónico,
+
+http://{{ domain }}{% url 'paralegapp:activate' uidb64=uid token=token %}
+
+
+{% endautoescape %}

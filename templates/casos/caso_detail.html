@@ -1,0 +1,150 @@
+{% extends 'casos/base.html' %}
+{% block title %}Detalle causa{% endblock %}
+{% block head %}
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script>
+$(document).ready(function(){
+  $('[data-toggle="tooltip"]').tooltip();
+});
+</script>
+
+{% endblock %}
+
+
+{% block content %}
+
+
+
+{% load humanize %}
+{% if user.is_authenticated %}
+        <br>
+        <!--  conteiner desde p3 hace q el fondo sea gris-->
+     <div class="row ">
+        <div class="container-fluid text-left p-3 my-3 bg-dark text-white rounded-lg border border-info col-xl-10 col-lg-10 col-md-11 col-sm-11 col-11 mx-auto">
+            <!--  esta es la parte de los inputs para filtrosdesde p3 hace q el fondo sea gris-->
+
+            <div class="row text-white">
+                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mx-auto text-center form p-2">
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <div class="row mx-auto justify-content-center border-bottom mb-12"><h4>{{ micaso.caso }}&nbsp&nbsp
+                                {% if micaso.favorito == True %}
+                                   <td><a href="{% url 'paralegapp:caso_favorito' caso.id 2 %}"><span class="fas fa-star" style="color:#ffc107"></span></a></td>
+                                {% else %}
+                                   <td><a href="{% url 'paralegapp:caso_favorito' caso.id 2 %}"><span class="far fa-star" style="color:darkgrey"></span></a></td>
+                                {% endif %}
+                            </h4></div><!--  caso y linea blanca-->
+                            <br>
+                            <div class="row mx-auto justify-content-center border-bottom mb-12">
+                                <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-12">
+                                     <div class="float-left"> <h6>Ingreso              :&nbsp&nbsp{{ caso.fecha_ingreso|date:'d-m-Y' }}</h6></div>
+                                </div>
+                                <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-12">
+                                     <div class="float-left"> <h6>Inicio de seguimiento:&nbsp&nbsp{{ micaso.fecha_inicio|date:'d-m-Y' }}</h6></div>
+                                </div>
+                                <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-12">
+                                     <div class="float-left"> <h6>Ultima actualización :&nbsp&nbsp{{ caso.last_change|date:'d-m-Y' }}</h6></div>
+                                </div>
+                                <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-12">
+                                     <div class="float-left"> <h6>Ultimo chequeo       :&nbsp&nbsp{{ caso.last_chek|date:'d-m-Y' }}</h6></div>
+                                </div>
+                                <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-12">
+                                     <div class="float-left"> <h6>Demandante           :&nbsp&nbsp{{ caso.dte_nombre }}</h6></div>
+                                </div>
+                                <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-12">
+                                     <div class="float-left"> <h6>Etapa                 :&nbsp&nbsp{{ caso.etapa }}</h6></div>
+                                </div>
+                                <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-12">
+                                     <div class="float-left"> <h6>Estado Proc.         :&nbsp&nbsp{{ caso.estproceso }}</h6></div>
+                                </div>
+                                <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-12">
+                                     <div class="float-left"> <h6>Estado Adm.          :&nbsp&nbsp{{ caso.est_adm }}</h6></div>
+                                </div>
+                                <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-12">
+                                     <div class="float-left"> <h6>Ubicación            :&nbsp&nbsp{{ caso.ubicacion }}</h6></div>
+                                </div>
+                                <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-12">
+                                     <div class="float-left"> <h6>Cuadernos            :&nbsp&nbsp{{ cuadernos.count }}</h6></div>
+                                </div>
+                                {% if caso.archivo != None %}
+                                    <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-12">
+                                         <div class="float-left"><h6>Texto            :&nbsp&nbsp&nbsp&nbsp<a href="https://civil.pjud.cl/{{ caso.archivo }}" target="blank"><span class="fas fa-file-pdf text-white"></span></a></h6></div>
+                                    </div>
+                                {% endif %}
+                                <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-12">
+                                     <div class="float-left">
+                                         <h6>Valor               :&nbsp&nbsp {% if not micaso.monto == None %} $&nbsp {{ micaso.monto|intcomma }} {% endif %}&nbsp&nbsp
+                                             <button class="fas fa-pencil-alt btn btn-outline-info btn-sm" data-toggle="modal" data-target="#order"></button>
+                                             {% include "casos/value.html" %}
+                                         </h6>
+                                     </div>
+                                </div>
+                                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                                     <div class="float-left"> <h6>Horas trabajadas:     :&nbsp&nbsp{{ horas|stringformat:".1f" }}</h6></div>
+                                </div>
+                                {% if usuario.empresa != None %}
+                                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                                         <div class="float-left" data-toggle="tooltip" data-placement="top" title="Usuarios de la compañía que tambien siguen este caso"> <h6>Usuarios      :&nbsp&nbsp
+                                               {% for i in participantes %}
+                                                   {% if i.usuario.pk != usuario.user.pk %}
+                                                        -{{ i.usuario.first_name }}&nbsp{{ i.usuario.last_name }}&nbsp &nbsp
+                                                   {% endif %}
+                                               {% endfor %}</h6>
+                                         </div>
+                                    </div>
+                                {% endif %}
+
+                            </div> <!--  detalles del caso -->
+                            <br>
+
+                            {% block tabla_caso %}
+
+                            {% endblock %}
+                            <br>
+                            {% if micaso.fecha_fin == None %}
+                                <button type="button" class="btn btn-outline-danger float-right"  data-toggle="modal" data-target="#order5">&nbsp  Dejar de seguir  &nbsp</button>
+                                  <div id="order5" class="modal fade" role="dialog">
+                                    <div class="modal-dialog modal-dialog-centered"> <!--esto lo centra en el medio-->
+                                        <div class="modal-content bg-dark text-white border border-info">
+                                            <div class="modal-body justify-content-center">
+                                                {% if est_act == 0 %}
+                                                    <legend class="border-bottom mb-4"><h5>¿Esta seguro que desea dejar de seguir esta causa?</h5><h6>Si lo hace no recibirá más actualizaciones</h6><br></legend>
+                                                        <button class="btn btn-outline-info" data-dismiss="modal">Cancelar</button>&nbsp&nbsp
+                                                        <a href="{% url 'paralegapp:caso_finalizar' caso.id 1%}">
+                                                          <button class="btn btn-outline-danger" type="submit"> Aceptar </button>
+                                                        </a>
+                                                {% else %}
+                                                     <legend class="border-bottom mb-4"><h5>La causa aún tiene actualizaciones pendientes</h5><br><h6>Finalice todas las actualizaciones para poder dejar de seguirla</h6><br></legend>
+                                                        <button class="btn btn-outline-info" data-dismiss="modal">Cancelar</button>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                  </div>
+                            {% else %}
+                                <button type="button" class="btn btn-outline-info float-right"  data-toggle="modal" data-target="#order5">&nbsp  Volver a Seguir  &nbsp</button>
+                                  <div id="order5" class="modal fade" role="dialog">
+                                    <div class="modal-dialog modal-dialog-centered"> <!--esto lo centra en el medio-->
+                                        <div class="modal-content bg-dark text-white border border-info">
+                                            <div class="modal-body justify-content-center">
+                                                <legend class="border-bottom mb-4"><h5>¿Esta seguro que desea volver a seguir esta causa?</h5><h6>Si lo hace volverá a recibir actualizaciones</h6><br></legend>
+                                                    <button class="btn btn-outline-info" data-dismiss="modal">Cancelar</button>&nbsp&nbsp
+                                                    <a href="{% url 'paralegapp:caso_finalizar' caso.id 0%}">
+                                                      <button class="btn btn-outline-success" type="submit"> Aceptar </button>
+                                                    </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                  </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+     </div>
+{% endif %}
+
+
+{% endblock %}

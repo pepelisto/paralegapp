@@ -1,0 +1,603 @@
+{% extends 'casos/base.html' %}
+{% block head %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+<script>
+    $(document).ready(function(){
+      $('[data-toggle="tooltip"]').tooltip();
+    });
+</script>
+
+{% endblock %}
+{% block content %}
+<div class="row mx-auto">
+    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12 float-left">
+         <!--container de usuario-->
+         <div class="container-fluid p-3 my-3 bg-dark text-white rounded border border-info">
+                <div class="row text-white">
+                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mx-auto text-center form p-2">
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                 <div class="row mx-auto justify-content-center mb-12">
+                                    <h5><span class="fas fa-user text-truncate" aria-hidden="true">&nbsp&nbsp{{usuario_activo.first_name }} {{usuario_activo.last_name }}</span></h5>
+                                 </div>
+                                 <div class="row mx-auto justify-content-center mb-12">
+                                     {% if usuario.empresa != None %}
+                                         <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                                             <div class="float-left"> <h6>Empresa:&nbsp&nbsp{{ usuario.empresa }}</h6></div>
+                                         </div>
+                                     {% endif %}
+                                     <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                                         <div class="float-left"> <h6>Correo:&nbsp&nbsp{{ usuario_activo.email }}</h6></div>
+                                     </div>
+                                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                                         <div class="float-left"> <h6>Último acceso:&nbsp&nbsp{{ usuario_activo.last_login|date:'d-m-Y' }}</h6></div>
+                                     </div>
+                                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                                         <div class="float-left"> <h6>Usuario desde:&nbsp&nbsp{{ usuario_activo.date_joined|date:'d-m-Y' }}</h6></div>
+                                     </div>
+                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+         </div>
+         <!--container de gestion-->
+         <div class="container-fluid p-3 my-3 bg-dark text-white rounded border border-info">
+                <div class="row text-white">
+                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mx-auto text-center form p-2">
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                 <div class="row mx-auto justify-content-center border-bottom mb-12">
+                                     <h5><span class="fas fa-chart-bar text-truncate" aria-hidden="true">&nbsp&nbspGestión</span></h5>
+                                 </div><br>
+                                 <!--grafico de nuemro -->
+                                 <div class="table-wrapper-scroll-y {% if usuario.empresa == None %} my-custom-scrollbarWW {% else %} my-custom-scrollbarWW2 {% endif %}">
+                                     <div class="container">
+                                         <div class="row my-2">
+                                                <div class="col-xl-11 col-lg-12 col-md-11 col-sm-12 col-12 mx-auto">
+                                                    <div class="card body" style="border-color: transparent ; background-color: transparent">
+                                                        <div class="card-body" style="border-color: transparent ; background-color: transparent">
+                                                            <canvas class="mx-auto" id="myChart" height="100"></canvas>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                         </div>
+                                     </div>
+                                     <div class="container">
+                                         <div class="row my-2">
+                                                <div class="col-xl-11 col-lg-12 col-md-11 col-sm-12 col-12 mx-auto">
+                                                    <div class="card body" style="border-color: transparent ; background-color: transparent">
+                                                        <div class="card-body" style="border-color: transparent ; background-color: transparent">
+                                                            <canvas class="mx-auto" id="myChartCausas" height="100"></canvas>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                         </div>
+                                     </div>
+                                     <div class="container">
+                                         <div class="row my-2">
+                                                <div class="col-xl-11 col-lg-12 col-md-11 col-sm-12 col-12 mx-auto">
+                                                    <div class="card body" style="border-color: transparent ; background-color: transparent">
+                                                        <div class="card-body" style="border-color: transparent ; background-color: transparent">
+                                                            <canvas class="mx-auto" id="myChartAct" height="100"></canvas>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                         </div>
+                                     </div>
+                                     <div class="container">
+                                         <div class="row my-2">
+                                                <div class="col-xl-11 col-lg-12 col-md-11 col-sm-12 col-12 mx-auto">
+                                                    <div class="card body" style="border-color: transparent ; background-color: transparent">
+                                                        <div class="card-body" style="border-color: transparent ; background-color: transparent">
+                                                            <canvas class="mx-auto" id="myChartTar" height="100"></canvas>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                         </div>
+                                     </div>
+                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+         </div>
+    </div>
+    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12 float-right">
+         {% if comentarios.count != 0 %}
+             <!--container de las actualizaciones-->
+             <div class="container-fluid p-3 my-3 bg-dark text-white rounded border border-info">
+                    <div class="row text-white">
+                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mx-auto text-center form p-2">
+                            <div class="panel panel-default">
+                                <div class="panel-body">
+                                     <div class="row mx-auto justify-content-center border-bottom mb-12">
+                                         <h5><span class="fas fa-bell text-truncate" aria-hidden="true">&nbsp&nbspActualizaciones recientes</span></h5>
+                                     </div><br>
+                                     <div class="table-wrapper-scroll-y my-custom-scrollbarIn ">
+                                        <table class="table table-striped table-light table-hover table-bordered mb-0" id="tabla" style="line-height:0.5">
+                                            <thead class="thead-dark sticky">
+                                                <tr>
+                                                    <th><a class="text-truncate text-light align-middle" data-toggle="tooltip" data-placement="top" title="Estado de trabajo de la actualización">E.</a></th>
+                                                    <th> <a class="text-truncate text-light align-middle"  data-toggle="tooltip" data-placement="top" title="Causa a la cual pertenece la actualización">Causa</a></th>
+                                                    <th> <a class="text-truncate text-light" data-toggle="tooltip" data-placement="top" title="Fecha de ingreso de la actualizacion">Fecha ingreso</a></th>
+                                                    <th> <a class="text-truncate text-light align-middle">Tramite</a></th>
+
+                                                </tr>
+                                            </thead>
+                                            <tbody id="myTable">
+                                                {% for estado in mis_estados %}
+                                                    <tr>
+                                                        {% if estado.estado_estado == 'Terminado' %}
+                                                            <td><a><span class="fas fa-circle fa-fw" aria-hidden="true" style="color:darkgreen" ></span></a></td>
+                                                        {% endif %}
+                                                        {% if estado.estado_estado == 'Ingresado' %}
+                                                           <td><a><span class="fas fa-circle fa-fw" aria-hidden="true" style="color:#d9534f"></span></a></td>
+                                                        {% endif %}
+                                                        {% if estado.estado_estado == 'En proceso' %}
+                                                           <td><a><span class="fas fa-circle fa-fw" aria-hidden="true" style="color:#ffc107"></span></a></td>
+                                                        {% endif %}
+                                                            <td><a class="text-truncate align-middle text-dark" href = "{% url 'paralegapp:detalle_actualizacion' estado.id %}" data-toggle="tooltip" data-placement="top" title="Causa a la cual pertenece la actualización">{{ estado.estado_caso.cuaderno.caso}}</a></td>
+                                                            <td><a class="text-truncate align-middle text-dark" href = "{% url 'paralegapp:detalle_actualizacion' estado.id %}" data-toggle="tooltip" data-placement="top" title="Fecha de ingreso de la actualización">{{ estado.fecha_ingreso|date:'d-m-Y' }}</a></td>
+                                                            <td><a class="text-truncate align-middle text-dark" href = "{% url 'paralegapp:detalle_actualizacion' estado.id %}">{{ estado.estado_caso.tramite }}</a></td>
+                                                    </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+             </div>
+             <!--container de las tareas-->
+             <div class="container-fluid p-3 my-3 bg-dark text-white rounded border border-info">
+                    <div class="row text-white">
+                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mx-auto text-center form p-2">
+                            <div class="panel panel-default">
+                                <div class="panel-body">
+                                     <div class="row mx-auto justify-content-center border-bottom mb-12">
+                                         <h5><span class="fas fa-tasks text-truncate" aria-hidden="true">&nbsp&nbspTareas Recientes</span></h5>
+                                     </div><br>
+                                     <div class="table-wrapper-scroll-y my-custom-scrollbarIn ">
+                                        <table class="table table-striped table-light table-hover table-bordered mb-0" id="tabla" style="line-height:0.5">
+                                            <thead class="thead-dark sticky">
+                                                <tr>
+                                                    <th style="width: 1px"><a class="text-truncate text-light align-middle" data-toggle="tooltip" data-placement="top" title="Estado">E.</a></th>
+                                                    <th><a class="text-truncate text-light align-middle" data-toggle="tooltip" data-placement="top" title="Nombre de la tarea o evento">Nombre</a></th>
+                                                    <th><a class="text-truncate text-light align-middle" data-toggle="tooltip" data-placement="top" title="Nombre del usuario creador de la tarea">Creador</a></th>
+                                                    <th style="width: 1px"><a class="text-truncate text-light align-middle" data-toggle="tooltip" data-placement="top" title="Fecha de creación de la tarea">Fecha creación</a></th>
+                                                    <th style="width: 1px"><a class="text-truncate text-light align-middle" data-toggle="tooltip" data-placement="top" title="Causa">Causa</a></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="myTable">
+                                                {% for tarea in tareas %}
+                                                    <tr>
+                                                           {% if tarea.tarea.estado == 'Por realizar' %}
+                                                                <td style="display: none"><a>Por realizar</a></td>
+                                                                <td><a><span class="fas fa-flag" aria-hidden="true" style="color:darkred" data-toggle="tooltip" data-placement="top" title="Pendiente"></span></a></td>
+                                                           {% endif %}
+                                                           {% if tarea.tarea.estado == 'En proceso' %}
+                                                                <td style="display: none"><a>En proceso</a></td>
+                                                                <td><a><span class="fas fa-adjust" aria-hidden="true" style="color:darkblue" data-toggle="tooltip" data-placement="top" title="Ejecutando"></span></a></td>
+                                                           {% endif %}
+                                                           {% if tarea.tarea.estado == 'Finalizada' %}
+                                                                <td style="display: none"><a>Finalizada</a></td>
+                                                                <td><a><span class="fas fa-check-circle" aria-hidden="true" style="color:darkgreen" data-toggle="tooltip" data-placement="top" title="Finalizada"></span></a></td>
+                                                           {% endif %}
+                                                            <td><a class="text-truncate align-middle text-dark" href = "{% url 'paralegapp:detalle_tarea' tarea.tarea.id %}" data-toggle="tooltip" title="{{ tarea.tarea.desc }}">{{ tarea.tarea.nombre }}&nbsp&nbsp&nbsp
+                                                               {% if tarea.tarea.importancia == 'Baja' %}        <span class="fas fa-arrow-circle-down float-right"  data-toggle="tooltip" data-placement="top" title="Impotancia media"></span> {% endif %}
+                                                               {% if tarea.tarea.importancia == 'Intermedia' %}  <span class="fas fa-arrow-circle-up float-right"    data-toggle="tooltip" data-placement="top" title="Impotancia alta"></span> {% endif %}
+                                                               {% if tarea.tarea.importancia == 'Urgente' %}     <span class="fas fa-fire-alt float-right"           aria-hidden="true" style="color:red" data-toggle="tooltip" data-placement="top" title="Urgente"></span> {% endif %}
+                                                               {% if tarea.tarea.importancia == 'Prioritario' %} <span class="fas fa-bell float-right"              aria-hidden="true" style="color:orange" data-toggle="tooltip" data-placement="top" title="Prioritario"></span> {% endif %}</a>
+                                                            </td>
+                                                            <td><a class="text-truncate align-middle text-dark" href = "{% url 'paralegapp:detalle_tarea' tarea.tarea.id %}" data-toggle="tooltip" title="{{ tarea.tarea.desc }}">{{ tarea.tarea.creador.first_name }}&nbsp{{ tarea.tarea.creador.last_name }}</a></td>
+                                                            <td><a class="text-truncate align-middle text-dark" href = "{% url 'paralegapp:detalle_tarea' tarea.tarea.id %}" data-toggle="tooltip" title="{{ tarea.tarea.desc }}">{{ tarea.tarea.fecha_creacion|date:'d-m-Y' }}</a></td>
+                                                            <td><a class="text-truncate align-middle text-dark" href = "{% url 'paralegapp:detalle_tarea' tarea.tarea.id %}" data-toggle="tooltip" title="{{ tarea.tarea.desc }}">{{ tarea.tarea.usuario.estado_caso.cuaderno.caso }}</a></td>
+                                                    </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+             </div>
+             <!-- conainer de los comentarios-->
+             <div class="container-fluid p-3 my-3 bg-dark text-white rounded border border-info">
+                    <div class="row text-white">
+                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mx-auto text-center form p-2">
+                            <div class="panel panel-default">
+                                <div class="panel-body">
+                                     <div class="row mx-auto justify-content-center border-bottom mb-12">
+                                         <h5><span class="	fas fa-comment text-truncate" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Comentarios recientes de otros usuarios en tareas que participas">&nbsp&nbspComentarios recientes</span></h5>
+                                     </div><br>
+                                     <div class="table-wrapper-scroll-y my-custom-scrollbarIn ">
+                                        <table class="table table-striped table-light table-hover table-bordered mb-0" id="tabla" style="line-height:0.5">
+                                            <thead class="thead-dark sticky">
+                                                <tr>
+                                                    <th><a class="text-truncate text-light align-middle" data-toggle="tooltip" data-placement="top" title="Usuario que comento">Usuario</a></th>
+                                                    <th><a class="text-truncate text-light align-middle"  data-toggle="tooltip" data-placement="top" title="Tarea que comento">Tarea</a></th>
+                                                    <th><a class="text-truncate text-light" data-toggle="tooltip" data-placement="top" title="Fecha del comentarion">Fecha</a></th>
+
+                                                </tr>
+                                            </thead>
+                                            <tbody id="myTable">
+                                                {% for com in comentarios %}
+                                                    <tr>
+                                                        <td><a class="text-truncate align-middle text-dark" href = "{% url 'paralegapp:detalle_tarea' com.tarea.id %}" data-toggle="tooltip" data-placement="top" title="{{ com.comentario }}">{{ com.usuario.first_name}}&nbsp&nbsp{{ com.usuario.last_name }}</a></td>
+                                                        <td><a class="text-truncate align-middle text-dark" href = "{% url 'paralegapp:detalle_tarea' com.tarea.id %}" data-toggle="tooltip" data-placement="top" title="{{ com.comentario }}">{{ com.tarea.nombre }}&nbsp&nbsp&nbsp
+                                                               {% if com.tarea.importancia == 'Baja' %}        <span class="fas fa-arrow-circle-down float-right"></span> {% endif %}
+                                                               {% if com.tarea.importancia == 'Intermedia' %}  <span class="fas fa-arrow-circle-up float-right" data-placement="top"></span> {% endif %}
+                                                               {% if com.tarea.importancia == 'Urgente' %}     <span class="fas fa-fire-alt float-right" style="color:red" data-placement="top"></span> {% endif %}
+                                                               {% if com.tarea.importancia == 'Prioritario' %} <span class="fas fa-bell float-right" style="color:orange" data-placement="top"></span> {% endif %}</a>
+                                                        </td>
+                                                        <td><a class="text-truncate align-middle text-dark" href = "{% url 'paralegapp:detalle_tarea' com.tarea.id %}" data-toggle="tooltip" data-placement="top" title="{{ com.comentario }}">{{ com.fecha|date:'d-m-Y' }}</a></td>
+                                                    </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+             </div>
+         {% else %}
+             <!--container de las actualizaciones-->
+             <div class="container-fluid p-3 my-3 bg-dark text-white rounded border border-info">
+                    <div class="row text-white">
+                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mx-auto text-center form p-2">
+                            <div class="panel panel-default">
+                                <div class="panel-body">
+                                     <div class="row mx-auto justify-content-center border-bottom mb-12">
+                                         <h5><span class="fas fa-bell text-truncate" aria-hidden="true">&nbsp&nbspActualizaciones recientes</span></h5>
+                                     </div><br>
+                                     <div class="table-wrapper-scroll-y my-custom-scrollbarIn{% if usuario.empresa == None %}2{% else %}3{% endif %}">
+                                        <table class="table table-striped table-light table-hover table-bordered mb-0" id="tabla" style="line-height:0.5">
+                                            <thead class="thead-dark sticky">
+                                                <tr>
+                                                    <th><a class="text-truncate text-light align-middle" data-toggle="tooltip" data-placement="top" title="Estado de trabajo de la actualización">E.</a></th>
+                                                    <th> <a class="text-truncate text-light align-middle"  data-toggle="tooltip" data-placement="top" title="Causa a la cual pertenece la actualización">Causa</a></th>
+                                                    <th> <a class="text-truncate text-light" data-toggle="tooltip" data-placement="top" title="Fecha de ingreso de la actualizacion">Fecha ingreso</a></th>
+                                                    <th> <a class="text-truncate text-light align-middle">Tramite</a></th>
+
+                                                </tr>
+                                            </thead>
+                                            <tbody id="myTable">
+                                                {% for estado in mis_estados %}
+                                                    <tr>
+                                                        {% if estado.estado_estado == 'Terminado' %}
+                                                            <td><a><span class="fas fa-circle fa-fw" aria-hidden="true" style="color:darkgreen" ></span></a></td>
+                                                        {% endif %}
+                                                        {% if estado.estado_estado == 'Ingresado' %}
+                                                           <td><a><span class="fas fa-circle fa-fw" aria-hidden="true" style="color:#d9534f"></span></a></td>
+                                                        {% endif %}
+                                                        {% if estado.estado_estado == 'En proceso' %}
+                                                           <td><a><span class="fas fa-circle fa-fw" aria-hidden="true" style="color:#ffc107"></span></a></td>
+                                                        {% endif %}
+                                                        {% if estado.estado_estado == 'sinfinalizar' %}
+                                                           <td><a><span class="fas fa-exclamation-triangle fa-fw" aria-hidden="true" style="color:#ffc107" data-toggle="tooltip" data-placement="top" title="No finalizo el estado antes de que ingresara la ultima actualizaicon de la causa"></span></a></td>
+                                                        {% endif %}
+                                                            <td><a class="text-truncate align-middle text-dark" href = "{% url 'paralegapp:detalle_actualizacion' estado.id %}" data-toggle="tooltip" data-placement="top" title="Causa a la cual pertenece la actualización">{{ estado.estado_caso.cuaderno.caso}}</a></td>
+                                                            <td><a class="text-truncate align-middle text-dark" href = "{% url 'paralegapp:detalle_actualizacion' estado.id %}" data-toggle="tooltip" data-placement="top" title="Fecha de ingreso de la actualización">{{ estado.fecha_ingreso|date:'d-m-Y' }}</a></td>
+                                                            <td><a class="text-truncate align-middle text-dark" href = "{% url 'paralegapp:detalle_actualizacion' estado.id %}">{{ estado.estado_caso.tramite }}</a></td>
+                                                    </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+             </div>
+             <!--container de las tareas-->
+             <div class="container-fluid p-3 my-3 bg-dark text-white rounded border border-info">
+                    <div class="row text-white">
+                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mx-auto text-center form p-2">
+                            <div class="panel panel-default">
+                                <div class="panel-body">
+                                     <div class="row mx-auto justify-content-center border-bottom mb-12">
+                                         <h5><span class="fas fa-tasks text-truncate" aria-hidden="true">&nbsp&nbspTareas Recientes</span></h5>
+                                     </div><br>
+                                     <div class="table-wrapper-scroll-y my-custom-scrollbarIn2 ">
+                                        <table class="table table-striped table-light table-hover table-bordered mb-0" id="tabla" style="line-height:0.5">
+                                            <thead class="thead-dark sticky">
+                                                <tr>
+                                                    <th style="width: 1px"><a class="text-truncate text-light align-middle" data-toggle="tooltip" data-placement="top" title="Estado">E.</a></th>
+                                                    <th><a class="text-truncate text-light align-middle" data-toggle="tooltip" data-placement="top" title="Nombre de la tarea o evento">Nombre</a></th>
+                                                    <th><a class="text-truncate text-light align-middle" data-toggle="tooltip" data-placement="top" title="Nombre del usuario creador de la tarea">Creador</a></th>
+                                                    <th style="width: 1px"><a class="text-truncate text-light align-middle" data-toggle="tooltip" data-placement="top" title="Fecha de creación de la tarea">Fecha creación</a></th>
+                                                    <th style="width: 1px"><a class="text-truncate text-light align-middle" data-toggle="tooltip" data-placement="top" title="Causa">Causa</a></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="myTable">
+                                                {% for tarea in tareas %}
+                                                    <tr>
+                                                           {% if tarea.tarea.estado == 'Por realizar' %}
+                                                                <td style="display: none"><a>Por realizar</a></td>
+                                                                <td><a><span class="fas fa-flag" aria-hidden="true" style="color:darkred" data-toggle="tooltip" data-placement="top" title="Pendiente"></span></a></td>
+                                                           {% endif %}
+                                                           {% if tarea.tarea.estado == 'En proceso' %}
+                                                                <td style="display: none"><a>En proceso</a></td>
+                                                                <td><a><span class="fas fa-adjust" aria-hidden="true" style="color:darkblue" data-toggle="tooltip" data-placement="top" title="Ejecutando"></span></a></td>
+                                                           {% endif %}
+                                                           {% if tarea.tarea.estado == 'Finalizada' %}
+                                                                <td style="display: none"><a>Finalizada</a></td>
+                                                                <td><a><span class="fas fa-check-circle" aria-hidden="true" style="color:darkgreen" data-toggle="tooltip" data-placement="top" title="Finalizada"></span></a></td>
+                                                           {% endif %}
+                                                            <td><a class="text-truncate align-middle text-dark" href = "{% url 'paralegapp:detalle_tarea' tarea.tarea.id %}" data-toggle="tooltip" title="{{ tarea.tarea.desc }}">{{ tarea.tarea.nombre }}&nbsp&nbsp&nbsp
+                                                               {% if tarea.tarea.importancia == 'Baja' %}        <span class="fas fa-arrow-circle-down float-right"  data-toggle="tooltip" data-placement="top" title="Impotancia media"></span> {% endif %}
+                                                               {% if tarea.tarea.importancia == 'Intermedia' %}  <span class="fas fa-arrow-circle-up float-right"    data-toggle="tooltip" data-placement="top" title="Impotancia alta"></span> {% endif %}
+                                                               {% if tarea.tarea.importancia == 'Urgente' %}     <span class="fas fa-fire-alt float-right"           aria-hidden="true" style="color:red" data-toggle="tooltip" data-placement="top" title="Urgente"></span> {% endif %}
+                                                               {% if tarea.tarea.importancia == 'Prioritario' %} <span class="fas fa-bell float-right"              aria-hidden="true" style="color:orange" data-toggle="tooltip" data-placement="top" title="Prioritario"></span> {% endif %}</a>
+                                                            </td>
+                                                            <td><a class="text-truncate align-middle text-dark" href = "{% url 'paralegapp:detalle_tarea' tarea.tarea.id %}" data-toggle="tooltip" title="{{ tarea.tarea.desc }}">{{ tarea.tarea.creador.first_name }}&nbsp{{ tarea.tarea.creador.last_name }}</a></td>
+                                                            <td><a class="text-truncate align-middle text-dark" href = "{% url 'paralegapp:detalle_tarea' tarea.tarea.id %}" data-toggle="tooltip" title="{{ tarea.tarea.desc }}">{{ tarea.tarea.fecha_creacion|date:'d-m-Y' }}</a></td>
+                                                            <td><a class="text-truncate align-middle text-dark" href = "{% url 'paralegapp:detalle_tarea' tarea.tarea.id %}" data-toggle="tooltip" title="{{ tarea.tarea.desc }}">{{ tarea.tarea.usuario.estado_caso.cuaderno.caso }}</a></td>
+                                                    </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+             </div>
+         {% endif %}
+    </div>
+</div>
+
+<script>
+    var ctx = document.getElementById('myChart').getContext('2d');
+    Chart.defaults.global.defaultFontColor = "#fff";
+    var chart = new Chart(ctx, {
+        // The type of chart we want to create
+        type: 'horizontalBar',
+        // The data for our dataset
+        data: {
+            labels: ['Causas', 'Actualizaciones', 'Tareas'],
+            datasets: [{
+                backgroundColor: 'rgb(0,198,214)',
+                borderColor: 'rgb(0,198,214)',
+                order: 0,
+                data: [{{ mis_casos }} , {{ con_est }}  , {{ con_ta }} ]
+            }]
+        },
+        // Configuration options go here
+       options: {
+          legend: {
+                display: false
+            },
+          tooltips: {
+                callbacks: {
+                   label: function(tooltipItem) {
+                          return tooltipItem.yLabel;
+                   }
+                }
+            },
+          scales: {
+            xAxes: [{
+              ticks: {
+                beginAtZero: true,
+                min: 0
+              },
+              gridLines: {
+                  display: true ,
+                  color: "#FFFFFF"
+             },
+             }]
+             },
+            title: {
+                display: true,
+                fontColor: "#FFFFFF",
+                fontSize: 16,
+                text: 'Causas activas, actualizaciones y tareas pendientes'
+            }
+            },
+    });
+</script>
+<script>
+    var ctx = document.getElementById('myChartCausas').getContext('2d');
+    Chart.defaults.global.defaultFontColor = "#fff";
+    var chart = new Chart(ctx, {
+        // The type of chart we want to create
+        type: 'line',
+        // The data for our dataset
+        data: {
+            labels: ['{{mes2}}', '{{mes1}}', '{{ mes0 }}'],
+            datasets: [
+                {
+                borderColor: 'rgb(200,198,10)',
+                order: 0,
+                data: [{{ca_in_2}}, {{ca_in_1}}, {{ca_in_0}}]
+            },
+            {
+                borderColor: 'rgb(12,124,17)',
+                order: 0,
+                data: [{{ca_fi_2}}, {{ca_fi_1}}, {{ca_fi_0}}]
+            },
+            ]
+        },
+        // Configuration options go here
+       options: {
+
+
+          legend: {
+                display: false
+            },
+            tooltips: {
+                callbacks: {
+                   label: function(tooltipItem) {
+                          return tooltipItem.yLabel;
+                   }
+                }
+            },
+          scales: {
+            yAxes: [{
+              ticks: {
+                beginAtZero: true,
+                min: 0
+              },
+              gridLines: {
+                  display: true ,
+                  color: "#FFFFFF"
+            },
+            }],
+            xAxes: [{
+              ticks: {
+                beginAtZero: true,
+                min: 0
+              },
+              gridLines: {
+                  display: true ,
+                  color: "#FFFFFF"
+            },
+            }],
+          },
+           title: {
+                display: true,
+                fontColor: "#FFFFFF",
+                fontSize: 16,
+                text: 'Causas ingresadas VS finalizadas'
+            }
+        }
+    });
+</script>
+<script>
+var ctx = document.getElementById('myChartAct').getContext('2d');
+Chart.defaults.global.defaultFontColor = "#fff";
+var chart = new Chart(ctx, {
+    // The type of chart we want to create
+    type: 'line',
+    // The data for our dataset
+    data: {
+        labels: ['{{mes2}}', '{{mes1}}', '{{ mes0 }}'],
+        datasets: [
+            {
+            borderColor: 'rgb(200,198,15)',
+            order: 0,
+            data: [{{ac_in_2}}, {{ac_in_1}}, {{ac_in_0}}]
+        },
+        {
+            borderColor: 'rgb(12,124,17)',
+            order: 0,
+            data: [{{ac_fi_2}}, {{ac_fi_1}}, {{ac_fi_0}}]
+        },
+        ]
+    },
+    // Configuration options go here
+   options: {
+      legend: {
+            display: false
+        },
+        tooltips: {
+            callbacks: {
+               label: function(tooltipItem) {
+                      return tooltipItem.yLabel;
+               }
+            }
+        },
+      scales: {
+        yAxes: [{
+          ticks: {
+            beginAtZero: true,
+            min: 0
+          },
+          gridLines: {
+              display: true ,
+              color: "#FFFFFF"
+        },
+        }],
+        xAxes: [{
+          ticks: {
+            beginAtZero: true,
+            min: 0
+          },
+          gridLines: {
+              display: true ,
+              color: "#FFFFFF"
+        },
+        }],
+      },
+       title: {
+            display: true,
+            fontColor: "#FFFFFF",
+            fontSize: 16,
+            text: 'Actualizaciones ingresadas VS finalizadas'
+        }
+    }
+});
+</script>
+<script>
+var ctx = document.getElementById('myChartTar').getContext('2d');
+Chart.defaults.global.defaultFontColor = "#fff";
+var chart = new Chart(ctx, {
+    // The type of chart we want to create
+    type: 'line',
+    // The data for our dataset
+    data: {
+        labels: ['{{mes2}}', '{{mes1}}', '{{ mes0 }}'],
+        datasets: [
+            {
+            borderColor: 'rgb(200,198,15)',
+            order: 0,
+            data: [{{ta_in_2}}, {{ta_in_1}}, {{ta_in_0}}]
+        },
+        {
+            borderColor: 'rgb(12,124,17)',
+            order: 0,
+            data: [{{ta_fi_2}}, {{ta_fi_1}}, {{ta_fi_0}}]
+        },
+        ]
+    },
+    // Configuration options go here
+   options: {
+      legend: {
+            display: false
+        },
+        tooltips: {
+            callbacks: {
+               label: function(tooltipItem) {
+                      return tooltipItem.yLabel;
+               }
+            }
+        },
+      scales: {
+        yAxes: [{
+          ticks: {
+            beginAtZero: true,
+            min: 0
+          },
+          gridLines: {
+              display: true ,
+              color: "#FFFFFF"
+        },
+        }],
+        xAxes: [{
+          ticks: {
+            beginAtZero: true,
+            min: 0
+          },
+          gridLines: {
+              display: true ,
+              color: "#FFFFFF"
+        },
+        }],
+      },
+       title: {
+            display: true,
+            fontColor: "#FFFFFF",
+            fontSize: 16,
+            text: 'Tareas ingresadas VS finalizadas'
+        }
+    }
+});
+</script>
+{% endblock %}

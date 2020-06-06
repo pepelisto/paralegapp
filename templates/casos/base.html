@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Bootstrap CSS -->
+    {% load static %}
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="{% static 'Paralegapp/style.css' %}"/>
+    <script src = {% static 'Paralegapp/js.js' %}> </script>
+    <title>{% block title %}ParalegApp{% endblock %}</title>
+    <link href='https://fonts.googleapis.com/css?family=Satisfy' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+    {% block head %}
+
+    {% endblock %}
+</head>
+
+<body>
+    <header class="site-header">
+        <!-- expand md esra que se oculten los botones cuando la pantalla es medium se puede cambiar a sm lg ets-->
+        <nav class="navbar navbar-expand-lg bg-dark navbar-dark border border-top-0 border-right-0 border-left-0 border-info">
+         <!-- container fluid usa toda la pantalla  solo container queda en el medio-->
+            <div class="container-fluid">
+                <img class="navbar-brand" alt="Paralegapp logo" src="{% static 'Paralegapp/images/final5.png' %}" width="130px">
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                {% if user.is_authenticated %}
+                    <div class="collapse navbar-collapse" id="navbarToggle">
+                        <div class="navbar-nav mr-auto">
+                            <a class="nav-item nav-link text-light" href="{% url 'paralegapp:inicio' %}">
+                                <span class="fas fa-home text-truncate" aria-hidden="true"> &nbsp Inicio</span>
+                            </a>
+                            <a class="nav-item nav-link text-light" href="{% url 'paralegapp:mis_casos' %}">
+                                <span class="fas fa-briefcase text-truncate" aria-hidden="true">&nbsp Causas</span>
+                            </a>
+                            <a class="nav-item nav-link text-light" href="{% url 'paralegapp:mis_estados' '-fecha_ingreso' 1 %}">
+                                <span class="fas fa-bell text-truncate" aria-hidden="true">&nbsp Actualizaciones </span>
+                            </a>
+                            <a class="nav-item nav-link text-light" href="{% url 'paralegapp:mis_tareas' 'tarea__fecha_plazo' %}">
+                                <span class="fas fa-tasks text-truncate" aria-hidden="true">&nbsp Tareas </span>
+                            </a>
+                            <a class="nav-item nav-link text-light" href="{% url 'paralegapp:agregar_casos' %}">
+                                <span class="fas fa-plus text-truncate" aria-hidden="true">&nbsp Agregar Causas</span>
+                            </a>
+                        </div>
+                        <!-- Navbar Right Side -->
+                        <div class="navbar-nav">
+                            <!--a class="nav-item nav-link text-light" href="{ # url 'paralegapp:gestion' %}">
+                                <span class="fas fa-chart-bar text-truncate" aria-hidden="true"> &nbspGestión</span>
+                            </a-->
+                            <a class="nav-item nav-link text-light" href="{% url 'paralegapp:usuario' %}">
+                                <span class="fas fa-user text-truncate" aria-hidden="true"> &nbsp{{ user.first_name }} </span>
+                            </a>
+                            <!--a class="nav-item nav-link text-light" href="{ url 'paralegapp:ayuda' %}">
+                                <span class="fas fa-question-circle text-truncate" aria-hidden="true"> &nbspAyuda</span>
+                            </a-->
+                            <a class="nav-item nav-link text-light" href="{% url 'paralegapp:logout' %}">
+                                <span class="fas fa-sign-out-alt text-truncate" aria-hidden="true">&nbsp LogOut</span>
+                            </a>
+                        </div>
+                    </div>
+                {% else %}
+                     <div class="collapse navbar-collapse" id="navbarToggle">
+                        <div class="navbar-nav mr-auto">
+                            <a class="nav-item nav-link" href="{% url 'paralegapp:home' %}">
+                                <span aria-hidden="true"></span> Acerca de
+                            </a>
+                        </div>
+                        <!-- Navbar Right Side -->
+                        <div class="navbar-nav">
+                            <a class="nav-item nav-link" href="{% url 'paralegapp:login' %}">
+                                <span  aria-hidden="true"></span> LogIn
+                            </a>
+                            <a class="nav-item nav-link" href="{% url 'paralegapp:register' %}">
+                                <span aria-hidden="true"></span> Crear Cuenta
+                            </a>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </nav>
+    </header>
+    <main role="main" class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }}">
+                           {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+                {% block content %}
+
+                {% endblock %}
+            </div>
+        </div>
+    </main>
+
+    <script src="{% static 'Paralegapp/js.js' %}"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+
+</body>
+</html>

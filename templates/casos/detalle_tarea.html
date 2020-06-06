@@ -1,0 +1,302 @@
+{% extends 'casos/base.html' %}
+{% block title %}Tarea detalle{% endblock %}
+{% block head %}
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function(){
+          $('[data-toggle="tooltip"]').tooltip();
+        });
+    </script>
+{% endblock %}
+
+{% block content %}
+
+{% if user.is_authenticated %}
+        <br>
+        <!--  conteiner desde p3 hace q el fondo sea gris-->
+     <div class="row ">
+        <div class="container-fluid text-left p-3 my-3 bg-dark text-white rounded-lg border border-info col-xl-10 col-lg-10 col-md-11 col-sm-11 col-11 mx-auto">
+            <!--  esta es la parte de los inputs para filtrosdesde p3 hace q el fondo sea gris-->
+            <div class="row text-white">
+                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mx-auto text-center form p-2">
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <div class="row mx-auto justify-content-center border-bottom mb-12">
+                              <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+                                <h3>Caso:  &nbsp {{ caso }}&nbsp&nbsp
+                                    {% if mi_caso.favorito == True %}
+                                       <td><span class="fas fa-star" style="color:#ffc107" data-toggle="tooltip" data-placement="top" title="Caso marcado como favorito"></span></td>
+                                    {% else %}
+                                       <td><span class="far fa-star" style="color:darkgrey"></span></td>
+                                    {% endif %}
+                                </h3>
+                              </div>
+                              <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+                                <h5> Etapa:  &nbsp {{ estado }}</h5><br>
+                              </div>
+                              <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12"><h5>
+                                    <span
+                                       {% if tarea.estado == 'Por realizar' %} class="fas fa-flag"         aria-hidden="true" style="color:darkred" data-toggle="tooltip" data-placement="top" title="Pendiente"> {% endif %}
+                                       {% if tarea.estado == 'En proceso' %}   class="fas fa-adjust"       aria-hidden="true" style="color:darkblue" data-toggle="tooltip" data-placement="top" title="Ejecutando"> {% endif %}
+                                       {% if tarea.estado == 'Finalizada' %}   class="fas fa-check-circle" aria-hidden="true" style="color:darkgreen" data-toggle="tooltip" data-placement="top" title="Finalizada"> {% endif %}
+                                    </span>&nbsp&nbsp&nbsp&nbsp
+                                     Tarea numero: &nbsp {{ tarea.numero }}&nbsp &nbsp&nbsp Nombre:  &nbsp {{ tarea.nombre }} &nbsp &nbsp&nbsp
+                                    <span
+                                       {% if tarea.importancia == 'Baja' %}          class="fas fa-arrow-circle-down" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Impotancia media"> {% endif %}
+                                       {% if tarea.importancia == 'Intermedia' %}    class="fas fa-arrow-circle-up"   aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Impotancia alta"> {% endif %}
+                                       {% if tarea.importancia == 'Urgente' %}       class="fas fa-fire-alt"          aria-hidden="true" style="color:red" data-toggle="tooltip" data-placement="top" title="Urgente"> {% endif %}
+                                       {% if tarea.importancia == 'Prioritario' %}   class="fas fa-bell"              aria-hidden="true" style="color:orange" data-toggle="tooltip" data-placement="top" title="Prioritario"> {% endif %}
+                                    </span></h5>
+                                  <br>
+                              </div>
+                            </div>
+                            <!--  caso y linea blanca-->
+                            <br>
+                            <div class="row mx-auto justify-content-center border-bottom mb-12">
+                                <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-12">
+                                     <div class="float-left"> <h6>Creador              :&nbsp&nbsp{{ tarea.creador.first_name }}&nbsp{{ tarea.creador.last_name }}</h6></div>
+                                </div>
+                                <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-12">
+                                     <div class="float-left"> <h6>Nombre               :&nbsp&nbsp{{ tarea.nombre }}</h6></div>
+                                </div>
+                                <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-12">
+                                     <div class="float-left"> <h6>Desc.                :&nbsp&nbsp{{ tarea.desc }}</h6></div>
+                                </div>
+                                <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-12">
+                                     <div class="float-left"> <h6>Creacion             :&nbsp&nbsp{{ tarea.fecha_creacion|date:'d-m-Y'}}</h6></div>
+                                </div>
+                                <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-12">
+                                     <div class="float-left"> <h6>Fecha                :&nbsp&nbsp{{ tarea.fecha_tarea|date:'d-m-Y' }}</h6></div>
+                                </div>
+                                <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-12">
+                                     <div class="float-left"> <h6>Plazo               :&nbsp&nbsp{{ tarea.fecha_plazo|date:'d-m-Y' }}</h6></div>
+                                </div>
+                                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                                     <div class="float-left"> <h6>Horas              :&nbsp&nbsp{{ tarea.horas }}</h6></div>
+                                </div>
+                                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                                     <div class="float-left">
+                                     {% if usuario.empresa != None and invitados.count > 1 %}
+                                         <h6>Usuarios participantes:&nbsp
+                                             {% for i in invitados %}
+                                                 {% if i.invitado.pk != usuario.user.pk %}
+                                                    -{{ i.invitado.first_name }}&nbsp{{ i.invitado.last_name }}&nbsp&nbsp
+                                                 {% endif %}
+                                             {% endfor %}
+                                         </h6>
+                                     {% endif %}
+                                     </div>
+                                </div>
+                                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                                     <div class="float-left"> <h6>Comentarios               :&nbsp&nbsp{{ tarea.comentarios }}</h6></div>
+                                </div>
+                                <br>
+                            </div>
+
+                            <!--  tareas del estado -->
+                            <br>
+                            <div class="row mx-auto justify-content-center mb-12">
+                                  <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-4"></div>
+                                  <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-4 justify-content-center flex-column">
+                                    <h5>Anotaciones:   &nbsp&nbsp</h5>
+                                      {% if tarea.estado == 'Por realizar' %}
+                                         <h6>(Inicie la tarea para poder ingresar anotaciones) </h6>
+                                      {% endif %}
+                                  </div>
+                                  <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-4 justify-content-center flex-column">
+                                      {% if tarea.estado == 'En proceso' %}
+                                        <button class="fas fa-plus btn btn-outline-info" data-toggle="modal" data-target="#order3">&nbsp Agregar Nota</button></h5>
+                                         {% load crispy_forms_tags %}
+                                          <div id="order3" class="modal fade" role="dialog">
+                                            <div class="modal-dialog modal-dialog-centered"> <!--esto lo centra en el medio-->
+                                                <div class="modal-content bg-dark text-white border border-info">
+                                                    <div class="modal-body">
+                                                        <form method="post" class="justify-content-center" id="form">
+                                                           {% csrf_token %}
+                                                              <legend class="border-bottom mb-4">Ingrese la nueva anotacion</legend>
+                                                                 <div class="form-group">
+                                                                    {{ form|crispy }}
+                                                                 </div>
+                                                               <button class="btn btn-outline-info" data-dismiss="modal">Cancelar</button>&nbsp&nbsp&nbsp
+                                                               <button class="btn btn-outline-info" type="submit">Guardar</button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                          </div>
+                                      {% endif %}
+                                  </div>
+
+                            </div>
+                                 {% if anotaciones.count > 3 %}
+                                    <div class="my-custom-scrollbar3">
+                                 {% endif %}
+                                        {% for c in anotaciones %}
+                                             <div class="row">
+                                                  {% if c.usuario == tarea.creador %}
+                                                        <div class="col-xl-1 col-lg-1 col-md-0 col-sm-0 col-0">
+                                                        </div>
+                                                        <div class="col-xl-7 col-lg-7 col-md-9 col-sm-9 col-10">
+                                                                {% if c.tipo == 'nota'  %}
+                                                                    <div class="media text-left p-3 my-3 bg-secondary text-white rounded-lg border border-white">
+                                                                {% else %}
+                                                                    <div class="media text-left p-3 my-3 bg-secondary text-white rounded-lg border border-warning">
+                                                                {% endif %}
+                                                                  <div class="media-body">
+                                                                    <h7> {{ c.usuario.first_name }} {{ c.usuario.last_name }}</h7>
+                                                                      <div class="float-right"><small><i>{{ c.fecha|date:'d-m-Y H:i' }}</i></small>
+                                                                           {% if c.tipo == 'nota' and c.usuario == usuario_activo %}
+                                                                               &nbsp&nbsp<button data-toggle="modal" data-target="#ordercom{{ c.pk }}" class="fas fa-trash btn btn-secondary btn-sm" aria-hidden="true"></button>
+                                                                           {% endif %}
+                                                                      </div>
+                                                                    <p><h8>{{ c.comentario }}</h8></p>
+                                                                  </div>
+                                                                </div>
+                                                        </div>
+                                                  {% else %}
+                                                        <div class="col-xl-4 col-lg-4 col-md-3 col-sm-3 col-2">
+                                                        </div>
+                                                        <div class="col-xl-7 col-lg-7 col-md-9 col-sm-9 col-10">
+                                                                {% if c.tipo == 'nota'  %}
+                                                                    <div class="media text-left p-3 my-3 bg-secondary text-white rounded-lg border border-white">
+                                                                {% else %}
+                                                                    <div class="media text-left p-3 my-3 bg-secondary text-white rounded-lg border border-alert">
+                                                                {% endif %}
+                                                                  <div class="media-body">
+                                                                    <h7> {{ c.usuario.first_name }} {{ c.usuario.last_name }} <div class="float-right"><small><i>{{ c.fecha|date:'d-m-Y H:i' }}</i></small>
+                                                                           {% if c.tipo == 'nota' and c.usuario == usuario_activo %}
+                                                                               &nbsp&nbsp<a href="{% url 'paralegapp:borrar_nota' c.pk tarea.pk %}" data-toggle="tooltip" data-placement="top" title="Borrar comentario"><span class="fas fa-trash" style="color: white"></span></a>
+                                                                           {% endif %}
+                                                                    </h7></div>
+                                                                    <p><h8>{{ c.comentario }}</h8></p>
+                                                                  </div>
+                                                                </div>
+                                                        </div>
+                                                  {% endif %}
+                                             </div>
+                                           <div id="ordercom{{ c.pk }}" class="modal fade" role="dialog">
+                                                <div class="modal-dialog modal-dialog-centered modal-sm"> <!--esto lo centra en el medio-->
+                                                    <div class="modal-content bg-dark text-white border border-info">
+                                                        <div class="modal-body justify-content-center">
+                                                            <legend class="border-bottom mb-4"><h6>¿Seguro desea borrar esta anotación?</h6></legend>
+                                                                <button class="btn btn-outline-info" data-dismiss="modal">Cancelar</button>&nbsp&nbsp&nbsp
+                                                                <a href="{% url 'paralegapp:borrar_nota' c.pk tarea.pk %}">
+                                                                  <button class="btn btn-outline-danger" type="submit">Borrar</button>
+                                                                </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                           </div>
+                                        {% endfor %}
+                                 {% if anotaciones.count > 3 %}
+                                    </div>
+                                 {% endif %}
+                                 {% if anotaciones.count == 0 and tarea.estado == 'En proceso' %}
+                                       <h5>Tarea no tiene anotaciones</h5>
+                                 {% endif %}
+                                 <br><div class="border-bottom"></div>
+                            <br>
+                            <div class="row"><!--  botones de opciones-->
+                            {% if tarea.creador == usuario_activo %}
+                                  <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-4">
+                                        <div class="justify-content-center flex-column float-right">
+                                           <a href="{% url 'paralegapp:detalle_actualizacion' mi_estado.pk %}"> <button type="button" style="width: 200px;" class="btn btn-info">Detalles Actualización</button></a>
+                                        </div>
+                                  </div>
+                                  <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-4">
+                                      {% if colaboradores.count > 0 %}
+                                            <div class="dropdown box h-100 d-flex flex-column">
+                                                <a><button  type="button" class="btn btn-info mx-auto" style="width: 200px;" data-toggle="modal" data-target="#order6">Invitar usuarios </button></a>
+                                                      <div id="order6" class="modal fade" role="dialog">
+                                                        <div class="modal-dialog modal-dialog-centered"> <!--esto lo centra en el medio-->
+                                                            <div class="modal-content bg-dark text-white border border-info">
+                                                                <div class="modal-body justify-content-center">
+                                                                    <legend class="border-bottom mb-4"><h5>Seleccione el colaborador que <br>desea invitar a esta tarea</h5></legend>
+                                                                           {% for e in colaboradores %}
+                                                                               <a href="{% url 'paralegapp:invitar_a_tarea' tarea.pk e.user.pk %}">
+                                                                                <button class="btn btn-outline-info" style="width: 250px;" type="submit">{{ e.user.first_name }}&nbsp{{ e.user.last_name }}</button><br><br>
+                                                                               </a>
+                                                                           {% endfor %}
+                                                                    <div class="border-bottom"></div>
+                                                                    <br><button class="btn btn-outline-danger" data-dismiss="modal">Cancelar</button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                      </div>
+                                            </div>
+                                      {% endif %}
+                                  </div>
+                                    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-4">
+                                        <div class="float-left justify-content-center flex-column">
+                                            {% if tarea.estado == 'Por realizar' %}
+                                                 <button type="button" class="btn btn-info" style="width: 200px;" data-toggle="modal" data-target="#order5">&nbsp&nbsp&nbsp  Iniciar Tarea  &nbsp&nbsp&nbsp</button>
+                                                      <div id="order5" class="modal fade" role="dialog">
+                                                        <div class="modal-dialog modal-dialog-centered"> <!--esto lo centra en el medio-->
+                                                            <div class="modal-content bg-dark text-white border border-info">
+                                                                <div class="modal-body justify-content-center">
+                                                                    <legend class="border-bottom mb-4"><h5>¿Esta seguro que desea tomar esta tarea?</h5></legend>
+                                                                        <button class="btn btn-outline-info" data-dismiss="modal">Cancelar</button>&nbsp&nbsp&nbsp
+                                                                        <a href="{% url 'paralegapp:iniciar_tarea' tarea.pk %}">
+                                                                          <button class="btn btn-outline-success" type="submit"> Iniciar Tarea </button>
+                                                                        </a>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                      </div>
+                                            {% endif %}
+                                            {% if tarea.estado == 'En proceso' %}
+                                                 <button type="button" class="btn btn-info"  data-toggle="modal" style="width: 200px;" data-target="#order4">&nbsp&nbsp&nbsp Finalizar Tarea &nbsp&nbsp&nbsp</button>
+                                                      <div id="order4" class="modal fade" role="dialog">
+                                                        <div class="modal-dialog modal-dialog-centered modal-sm"> <!--esto lo centra en el medio-->
+                                                            <div class="modal-content bg-dark text-white border border-info">
+                                                                <div class="modal-body justify-content-center">
+                                                                    <form method="post" class="justify-content-center">
+                                                                      {% csrf_token %}
+                                                                         <fieldset class="form-group">
+                                                                             <legend class="border-bottom mb-4"><h5>¿Esta seguro que <br>desea finalizar tarea?<br> </h5><h6> indique el total de horas dedicadas<br> </h6></legend>
+                                                                                {{ form2|crispy }}
+                                                                                <button class="btn btn-outline-info" data-dismiss="modal">Cancelar</button>&nbsp&nbsp&nbsp
+                                                                                <button class="btn btn-outline-danger" type="submit">Finalizar</button>
+                                                                         </fieldset>
+                                                                    </form>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                      </div>
+                                            {% endif %}
+                                            {% if tarea.estado == 'Finalizada' %}
+                                                 <button type="button" class="btn btn-info"  data-toggle="modal" style="width: 200px;" data-target="#order5">&nbsp&nbsp&nbsp  Retomar Tarea  &nbsp&nbsp&nbsp</button>
+                                                      <div id="order5" class="modal fade" role="dialog">
+                                                        <div class="modal-dialog modal-dialog-centered"> <!--esto lo centra en el medio-->
+                                                            <div class="modal-content bg-dark text-white border border-info">
+                                                                <div class="modal-body justify-content-center">
+                                                                    <legend class="border-bottom mb-4"><h5>¿Esta seguro que desea retomar esta tarea?</h5></legend>
+                                                                        <button class="btn btn-outline-info" data-dismiss="modal">Cancelar</button>&nbsp&nbsp&nbsp
+                                                                        <a href="{% url 'paralegapp:reiniciar_tarea' tarea.pk %}">
+                                                                          <button class="btn btn-outline-danger" type="submit"> Retomar Tarea </button>
+                                                                        </a>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                      </div>
+                                            {% endif %}
+                                        </div>
+                                     </div>
+                              {% endif %}
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+     </div>
+
+
+
+
+{% endif %}
+
+
+{% endblock %}

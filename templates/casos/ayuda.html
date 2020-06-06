@@ -1,0 +1,50 @@
+{% extends 'casos/base.html' %}
+{% block head %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script>
+    $(document).ready(function(){
+      $('[data-toggle="tooltip"]').tooltip();
+    });
+</script>
+
+
+
+
+{% endblock %}
+{% block content %}
+
+  <div class="row ">
+      <div class="container-fluid text-left p-3 my-3 bg-dark text-white rounded-lg border border-info col-xl-10 col-lg-10 col-md-11 col-sm-11 col-11 mx-auto">
+           <div class="row mx-auto justify-content-center border-bottom mb-12">
+              <h5><span class="fas fa-briefcase text-truncate" aria-hidden="true">&nbsp&nbspCausas</span></h5>
+           </div><br>
+
+      </div>
+
+      <div class="container-fluid text-left p-3 my-3 bg-dark text-white rounded-lg border border-info col-xl-10 col-lg-10 col-md-11 col-sm-11 col-11 mx-auto">
+           <div class="row mx-auto justify-content-center border-bottom mb-12">
+              <h5><span class="fas fa-bell text-truncate" aria-hidden="true">&nbsp&nbspActualizaciones</span></h5>
+           </div><br>
+
+      </div>
+      <div class="container-fluid text-left p-3 my-3 bg-dark text-white rounded-lg border border-info col-xl-10 col-lg-10 col-md-11 col-sm-11 col-11 mx-auto">
+           <div class="row mx-auto justify-content-center border-bottom mb-12">
+              <h5><span class="fas fa-tasks text-truncate" aria-hidden="true">&nbsp&nbspTareas</span></h5>
+           </div><br>
+
+      </div>
+      <div class="container-fluid text-left p-3 my-3 bg-dark text-white rounded-lg border border-info col-xl-10 col-lg-10 col-md-11 col-sm-11 col-11 mx-auto">
+           <div class="row mx-auto justify-content-center border-bottom mb-12">
+              <h5><span class="fas fa-plus text-truncate" aria-hidden="true">&nbsp&nbspAgregar Causas</span></h5>
+           </div><br>
+
+      </div>
+      <div class="container-fluid text-left p-3 my-3 bg-dark text-white rounded-lg border border-info col-xl-10 col-lg-10 col-md-11 col-sm-11 col-11 mx-auto">
+           <div class="row mx-auto justify-content-center border-bottom mb-12">
+              <h5><span class="fas fa-home text-truncate" aria-hidden="true">&nbsp&nbspInicio</span></h5>
+           </div><br>
+
+      </div>
+  </div>
+
+{% endblock %}

@@ -1,0 +1,56 @@
+{% extends 'casos/base.html' %}
+{% block head %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script>
+    $(document).ready(function(){
+      $('[data-toggle="tooltip"]').tooltip();
+    });
+</script>
+
+{% endblock %}
+{% block content %}
+
+
+<div class="row mx-auto">
+    <div class="col-xl-8 col-lg-9 col-md-10 col-sm-12 col-12 mx-auto">
+         <!--container de usuario-->
+         <div class="container-fluid p-3 my-3 bg-dark text-white rounded border border-info">
+                <div class="row text-white">
+                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mx-auto text-center form p-2">
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                 <div class="row mx-auto justify-content-center mb-12">
+                                    <h5><span class="fas fa-user text-truncate" aria-hidden="true">&nbsp&nbsp{{usuario_activo.first_name }} {{usuario_activo.last_name }}</span></h5>
+                                 </div>
+                                 <div class="row mx-auto justify-content-center mb-12">
+                                     {% if usuario.empresa != None %}
+                                         <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                                             <div class="float-left"> <h6>Empresa:&nbsp&nbsp{{ usuario.empresa }}</h6></div>
+                                         </div>
+                                     {% endif %}
+                                     <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                                         <div class="float-left"> <h6>Correo:&nbsp&nbsp{{ usuario_activo.email }}</h6></div>
+                                     </div>
+                                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                                         <div class="float-left"> <h6>Último acceso:&nbsp&nbsp{{ usuario_activo.last_login|date:'d-m-Y' }}</h6></div>
+                                     </div>
+                                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                                         <div class="float-left"> <h6>Usuario desde:&nbsp&nbsp{{ usuario_activo.date_joined|date:'d-m-Y' }}</h6></div>
+                                     </div>
+                                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                                         <div class="float-left"> <h6>Causas activas:&nbsp&nbsp{{ mis_casos_a }}</h6></div>
+                                     </div>
+                                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                                         <div class="float-left"> <h6>Causas Totales:&nbsp&nbsp{{ mis_casos_t }}</h6></div>
+                                     </div>
+                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+         </div>
+
+    </div>
+</div>
+
+{% endblock %}

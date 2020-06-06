@@ -1,0 +1,20 @@
+
+{% load crispy_forms_tags %}
+
+          <div id="order" class="modal fade" role="dialog">
+            <div class="modal-dialog modal-dialog-centered modal-sm"> <!--esto lo centra en el medio-->
+                <div class="modal-content bg-dark text-white border border-info">
+                    <div class="modal-body">
+                            <form method="post" class="justify-content-center">
+                               {% csrf_token %}
+                               <fieldset class="form-group">
+                                  <legend class="border-bottom mb-4">Ingrese el valor del caso</legend>
+                                  {{ form|crispy }}
+                                   <button class="btn btn-outline-info" data-dismiss="modal">Cancelar</button>&nbsp&nbsp&nbsp
+                                   <button class="btn btn-outline-info" type="submit">Guardar</button>
+                               </fieldset>
+                            </form>
+                    </div>
+                </div>
+            </div>
+          </div>

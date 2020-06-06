@@ -1,0 +1,39 @@
+{% extends 'casos/base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+<!--section id="cover" class="min-vh-100"-->
+    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 text-white text-center">
+    {% load static %}
+       <div class="fill mx-auto"><br><br>
+           <img class="rounded" alt="foto" src="{% static 'Paralegapp/images/final4.png' %}" width="350px">
+       </div>
+    </div>
+    <div id="cover-caption">
+        <div class="container">
+            <div class="row text-white">
+                 <div class="col-xl-5 col-lg-6 col-md-8 col-sm-10 mx-auto text-center form p-4">
+                    <div class="px-2">
+                      <form method="POST" class="justify-content-center" >
+                          {% csrf_token %}
+                          <fieldset class="form-group">
+                              <legend class="border-bottom mb-4">Inscibete hoy</legend>
+                              {{ form|crispy }}
+                          </fieldset>
+                          <div class="form-group">
+                              <button class="btn btn-outline-info" type="submit">Sign Up</button>
+                          </div>
+                      </form>
+                      <div class="border-top pt-3">
+                          <small class="text-muted">
+                              ¿Ya tienes una cuenta ParalegApp? <a class="ml-2" href="{% url 'paralegapp:login' %}">Sing in</a>
+                          </small>
+                      </div>
+                    </div>
+                 </div>
+            </div>
+        </div>
+    </div>
+<!--/section-->
+
+
+{% endblock %}

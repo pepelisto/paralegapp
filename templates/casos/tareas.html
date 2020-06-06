@@ -1,0 +1,200 @@
+
+{% extends 'casos/base.html' %}
+{% block title %}Mis Tareas{% endblock %}
+{% block head %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script>
+    $(document).ready(function(){
+      $("#myInput").on("keyup", function() {
+        var value = $(this).val().toLowerCase();
+        $("#myTable tr").filter(function() {
+          $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+        });
+      });
+    });
+</script>
+<script>
+$(document).ready(function(){
+  $('[data-toggle="tooltip"]').tooltip();
+});
+</script>
+<script>
+ $(function() {
+  $('input[type="checkbox"]').change(function() {
+    // We check if one or more checkboxes are selected
+    // If one or more is selected, we perform filtering
+    if($('input[type="checkbox"]:checked').length > 0) {
+      // Get values all checked boxes
+      var vals = $('input[type="checkbox"]:checked').map(function() {
+        return this.value;
+      }).get();
+      // Here we do two things to table rows
+      // 1. We hide all
+      // 2. Then we filter, show those whose value in first <td> matches checkbox value
+      $('tbody tr')
+       .hide()    // 1
+      .filter(function() {    // 2
+        return vals.indexOf($(this).find('td:first').text()) > -1;
+      }).show();
+    } else {
+      // Show all
+      $('tbody tr').show();
+    }
+  });
+});
+</script>
+
+{% endblock %}
+{% block content %}
+<br>                                                        <!-- desde p3 hace q el fondo sea gris-->
+            <div class="col-xl-11 col-lg-12 col-md-12 col-sm-12 container-fluid casos-container p-3 my-3 bg-dark text-white rounded border border-info">
+                <div class="row text-white">
+                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mx-auto text-center form p-2">
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                 <div class="row mx-auto justify-content-center border-bottom mb-12">
+                                    <h4>Tareas programadas</h4>
+                                 </div><br>
+                                 <div class="row">
+                                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-6">
+                                        <div class="float-left dropdown box h-100 d-flex justify-content-center flex-column">
+                                            <button  type="button" class="btn btn-info float-left largo dropdown-toggle" data-toggle="dropdown">Mostrar &nbsp</button>
+                                                <div class="dropdown-menu">
+                                                    <div class="tags">
+                                                        <label class="dropdown-item">&nbsp&nbsp
+                                                            <input type="checkbox" class="form-check-input" value="Por realizar">Por realizar
+                                                        </label>
+                                                        <label class="dropdown-item">&nbsp&nbsp
+                                                            <input type="checkbox" class="form-check-input" value="En proceso">En proceso
+                                                        </label>
+                                                        <label class="dropdown-item">&nbsp&nbsp
+                                                            <input type="checkbox" class="form-check-input" value="Finalizada">Finalizadas
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                        </div>&nbsp&nbsp&nbsp&nbsp
+                                    </div>
+                                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-6">
+                                         <div class="float-right"><input class="form-control" id="myInput" type="text" placeholder="Buscar..."></div>
+                                    </div>
+                                 </div><br>
+                                 <div class="table-wrapper-scroll-y my-custom-scrollbar">
+                                    <table class="table table-striped table-light table-hover table-bordered mb-0" style="line-height:0.5">
+                                        <thead class="thead-dark sticky">
+                                            <tr>
+                                                <th style="width: 1px"><a class="text-truncate text-light align-middle" data-toggle="tooltip" data-placement="top" title="Estado"
+                                                        {% if orden == '-tarea__estado' %}  href="{% url 'paralegapp:mis_tareas' 'tarea__estado' %}"
+                                                        {% elif orden == 'tarea__estado' %}   href="{% url 'paralegapp:mis_tareas' '-tarea__estado' %}"
+                                                        {% else %} href="{% url 'paralegapp:mis_tareas' '-tarea__estado' %}" {% endif %}>Est.
+                                                    <span
+                                                        {% if orden == '-tarea__estado' %} class="fas fa-sort-down" {% endif %}
+                                                        {% if orden == 'tarea__estado' %}  class="fas fa-sort-up"   {% endif %}>
+                                                    </span></a>
+                                                </th>
+                                                <th style="width: 1px"><a class="text-truncate text-light align-middle" data-toggle="tooltip" data-placement="top" title="Causa"
+                                                        {% if orden == '-tarea__usuario__estado_caso__cuaderno__caso' %}  href="{% url 'paralegapp:mis_tareas' 'tarea__usuario__estado_caso__cuaderno__caso' %}"
+                                                        {% elif orden == 'tarea__usuario__estado_caso__cuaderno__caso' %}   href="{% url 'paralegapp:mis_tareas' '-tarea__usuario__estado_caso__cuaderno__caso' %}"
+                                                        {% else %} href="{% url 'paralegapp:mis_tareas' '-tarea__usuario__estado_caso__cuaderno__caso' %}" {% endif %}>Causa
+                                                    <span
+                                                        {% if orden == '-tarea__usuario__estado_caso__cuaderno__caso' %} class="fas fa-sort-down" {% endif %}
+                                                        {% if orden == 'tarea__usuario__estado_caso__cuaderno__caso' %}  class="fas fa-sort-up"   {% endif %}>
+                                                    </span></a>
+                                                </th>
+                                                <th style="width: 200px;"><a class="text-truncate text-light align-middle" data-toggle="tooltip" data-placement="top" title="Nombre de la tarea o evento"
+                                                        {% if orden == '-tarea__nombre' %}  href="{% url 'paralegapp:mis_tareas' 'tarea__nombre' %}"
+                                                        {% elif orden == 'tarea__nombre' %}   href="{% url 'paralegapp:mis_tareas' '-tarea__nombre' %}"
+                                                        {% else %} href="{% url 'paralegapp:mis_tareas' '-tarea__nombre' %}" {% endif %}>Nombre
+                                                    <span
+                                                        {% if orden == '-tarea__nombre' %} class="fas fa-sort-down" {% endif %}
+                                                        {% if orden == 'tarea__nombre' %}  class="fas fa-sort-up"   {% endif %}>
+                                                    </span></a>
+                                                </th>
+                                                <th><a class="text-truncate text-light align-middle" data-toggle="tooltip" data-placement="top" title="Nombre del usuario creador de la tarea"
+                                                        {% if orden == '-tarea__creador' %}  href="{% url 'paralegapp:mis_tareas' 'tarea__creador' %}"
+                                                        {% elif orden == 'tarea__creador' %}   href="{% url 'paralegapp:mis_tareas' '-tarea__creador' %}"
+                                                        {% else %} href="{% url 'paralegapp:mis_tareas' '-tarea__creador' %}" {% endif %}>Creador
+                                                    <span
+                                                        {% if orden == '-tarea__creador' %} class="fas fa-sort-down" {% endif %}
+                                                        {% if orden == 'tarea__creador' %}  class="fas fa-sort-up"   {% endif %}>
+                                                    </span></a>
+                                                </th>
+                                                <th><a class="text-truncate text-light align-middle" data-toggle="tooltip" data-placement="top" title="Horas de trabajo"
+                                                        {% if orden == '-tarea__horas' %}  href="{% url 'paralegapp:mis_tareas' 'tarea__horas' %}"
+                                                        {% elif orden == 'tarea__horas' %}   href="{% url 'paralegapp:mis_tareas' '-tarea__horas' %}"
+                                                        {% else %} href="{% url 'paralegapp:mis_tareas' '-tarea__horas' %}" {% endif %}>Horas
+                                                    <span
+                                                        {% if orden == '-tarea__horas' %} class="fas fa-sort-down" {% endif %}
+                                                        {% if orden == 'tarea__horas' %}  class="fas fa-sort-up"   {% endif %}>
+                                                    </span></a>
+                                                </th>
+                                                <th style="width: 1px"><a class="text-truncate text-light align-middle" data-toggle="tooltip" data-placement="top" title="Plazo determinado por el creador para finalizar la tarea"
+                                                        {% if orden == '-tarea__fecha_plazo' %}  href="{% url 'paralegapp:mis_tareas' 'tarea__fecha_plazo' %}"
+                                                        {% elif orden == 'tarea__fecha_plazo' %}   href="{% url 'paralegapp:mis_tareas' '-tarea__fecha_plazo' %}"
+                                                        {% else %} href="{% url 'paralegapp:mis_tareas' '-tarea__fecha_plazo' %}" {% endif %}>Plazo
+                                                    <span
+                                                        {% if orden == '-tarea__fecha_plazo' %} class="fas fa-sort-down" {% endif %}
+                                                        {% if orden == 'tarea__fecha_plazo' %}  class="fas fa-sort-up"   {% endif %}>
+                                                    </span></a>
+                                                </th>
+                                                <th style="width: 1px"><a class="text-truncate text-light align-middle" data-toggle="tooltip" data-placement="top" title="Fecha de creación de la tarea"
+                                                        {% if orden == '-tarea__fecha_creacion' %}  href="{% url 'paralegapp:mis_tareas' 'tarea__fecha_creacion' %}"
+                                                        {% elif orden == 'tarea__fecha_creacion' %}   href="{% url 'paralegapp:mis_tareas' '-tarea__fecha_creacion' %}"
+                                                        {% else %} href="{% url 'paralegapp:mis_tareas' '-tarea__fecha_creacion' %}" {% endif %}>Creación
+                                                    <span
+                                                        {% if orden == '-tarea__fecha_creacion' %} class="fas fa-sort-down" {% endif %}
+                                                        {% if orden == 'tarea__fecha_creacion' %}  class="fas fa-sort-up"   {% endif %}>
+                                                    </span></a>
+                                                </th>
+                                                <th style="width: 1px"><a class="text-truncate text-light align-middle" data-toggle="tooltip" data-placement="top" title="Fecha de realización de la tarea"
+                                                        {% if orden == '-tarea__fecha_tarea' %}  href="{% url 'paralegapp:mis_tareas' 'tarea__fecha_tarea' %}"
+                                                        {% elif orden == 'tarea__fecha_tarea' %}   href="{% url 'paralegapp:mis_tareas' '-tarea__fecha_tarea' %}"
+                                                        {% else %} href="{% url 'paralegapp:mis_tareas' '-tarea__fecha_tarea' %}" {% endif %}>Fecha
+                                                    <span
+                                                        {% if orden == '-tarea__fecha_tarea' %} class="fas fa-sort-down" {% endif %}
+                                                        {% if orden == 'tarea__fecha_tarea' %}  class="fas fa-sort-up"   {% endif %}>
+                                                    </span></a>
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="myTable">
+                                            {% for tarea in tareas %}
+                                                <tr>
+                                                       {% if tarea.tarea.estado == 'Por realizar' %}
+                                                            <td style="display: none"><a>Por realizar</a></td>
+                                                            <td><a><span class="fas fa-flag" aria-hidden="true" style="color:darkred" data-toggle="tooltip" data-placement="top" title="Pendiente"></span></a></td>
+                                                       {% endif %}
+                                                       {% if tarea.tarea.estado == 'En proceso' %}
+                                                            <td style="display: none"><a>En proceso</a></td>
+                                                            <td><a><span class="fas fa-adjust" aria-hidden="true" style="color:darkblue" data-toggle="tooltip" data-placement="top" title="Ejecutando"></span></a></td>
+                                                       {% endif %}
+                                                       {% if tarea.tarea.estado == 'Finalizada' %}
+                                                            <td style="display: none"><a>Finalizada</a></td>
+                                                            <td><a><span class="fas fa-check-circle" aria-hidden="true" style="color:darkgreen" data-toggle="tooltip" data-placement="top" title="Finalizada"></span></a></td>
+                                                       {% endif %}
+                                                    <td><a class="text-truncate align-middle text-dark" href = "{% url 'paralegapp:detalle_tarea' tarea.tarea.id %}" data-toggle="tooltip" title="{{ tarea.tarea.desc }}">{{ tarea.tarea.usuario.estado_caso.cuaderno.caso }}</a></td>
+                                                    <td><a class="text-truncate align-middle text-dark" href = "{% url 'paralegapp:detalle_tarea' tarea.tarea.id %}" data-toggle="tooltip" title="{{ tarea.tarea.desc }}">{{ tarea.tarea.nombre }}&nbsp&nbsp&nbsp
+                                                       {% if tarea.tarea.importancia == 'Baja' %}        <span class="fas fa-arrow-circle-down float-right"  data-toggle="tooltip" data-placement="top" title="Impotancia media"></span> {% endif %}
+                                                       {% if tarea.tarea.importancia == 'Intermedia' %}  <span class="fas fa-arrow-circle-up float-right"    data-toggle="tooltip" data-placement="top" title="Impotancia alta"></span> {% endif %}
+                                                       {% if tarea.tarea.importancia == 'Urgente' %}     <span class="fas fa-fire-alt float-right"           aria-hidden="true" style="color:red" data-toggle="tooltip" data-placement="top" title="Urgente"></span> {% endif %}
+                                                       {% if tarea.tarea.importancia == 'Prioritario' %} <span class="fas fa-bell float-right"              aria-hidden="true" style="color:orange" data-toggle="tooltip" data-placement="top" title="Prioritario"></span> {% endif %}</a>
+                                                    </td>
+                                                    <td><a class="text-truncate align-middle text-dark" href = "{% url 'paralegapp:detalle_tarea' tarea.tarea.id %}" data-toggle="tooltip" title="{{ tarea.tarea.desc }}">{{ tarea.tarea.creador.first_name }}&nbsp{{ tarea.tarea.creador.last_name }}</a></td>
+                                                    <td><a class="text-truncate align-middle text-dark" href = "{% url 'paralegapp:detalle_tarea' tarea.tarea.id %}" data-toggle="tooltip" title="{{ tarea.tarea.desc }}">{{ tarea.tarea.horas}}</a></td>
+                                                    <td><a class="text-truncate align-middle text-dark" href = "{% url 'paralegapp:detalle_tarea' tarea.tarea.id %}" data-toggle="tooltip" title="{{ tarea.tarea.desc }}">
+                                                        {% if tarea.tarea.fecha_plazo < hoy %}<font style="color: red">{{ tarea.tarea.fecha_plazo|date:'d-m-Y' }}</font>{% else %}{{ tarea.tarea.fecha_plazo|date:'d-m-Y' }}{% endif %}</a></td>
+                                                    <td><a class="text-truncate align-middle text-dark" href = "{% url 'paralegapp:detalle_tarea' tarea.tarea.id %}" data-toggle="tooltip" title="{{ tarea.tarea.desc }}">{{ tarea.tarea.fecha_creacion|date:'d-m-Y' }}</a></td>
+                                                    <td><a class="text-truncate align-middle text-dark" href = "{% url 'paralegapp:detalle_tarea' tarea.tarea.id %}" data-toggle="tooltip" title="{{ tarea.tarea.desc }}">{{ tarea.tarea.fecha_tarea|date:'d-m-Y' }}</a></td>
+                                                </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                 </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+{% endblock content %}

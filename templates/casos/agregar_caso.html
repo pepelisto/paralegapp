@@ -1,0 +1,100 @@
+{% extends 'casos/base.html' %}
+
+{% load crispy_forms_tags %}
+{% block title %}Mis Actualizaciones{% endblock %}
+
+{% block head %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.0/js/bootstrap-select.min.js"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.0/css/bootstrap-select.min.css" rel="stylesheet" />
+
+<script>
+$(document).ready(function(){
+  $('[data-toggle="tooltip"]').tooltip();
+});
+</script>
+{% endblock %}
+
+{% block content %}
+
+<br>
+<!--section id="cover" class="min-vh-100"--> <!--este es el cuadrado negro grande-->
+<br>                                                        <!-- desde p3 hace q el fondo sea gris-->
+        <div class="col-xl-9 col-lg-11 col-md-12 col-sm-12 container-fluid casos-container text-left p-3 my-3 bg-dark text-white rounded border border-info">
+            <div class="row text-white">
+                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mx-auto text-center form p-2">
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <div class="row mx-auto justify-content-center border-bottom mb-12">
+                                <h4>Seguir nuevas causas</h4>
+                            </div><br>
+                                  <form method="POST" class="justify-content-center" >
+                                      {% csrf_token %}
+                                      <fieldset class="form-group form-inline">
+                                         <div class="row mx-auto col-xl-10 col-lg-11 col-md-12 col-sm-12">
+                                                <div>
+                                                    <label for="id_rol" class=" requiredField">Rol</label>
+                                                    <input placeholder="Rol" type="text"  name="rol" maxlength="1" class="textinput textInput form-control" required="" id="id_rol" style="width: 50px">
+                                                </div>&nbsp&nbsp&nbsp
+                                                <div>
+                                                    <label for="id_numero" class=" requiredField">Número</label>
+                                                    <input type="number" placeholder="Número" name="numero" min="0" class="numberinput form-control" required="" id="id_numero" style="width: 90px">
+                                                </div>&nbsp&nbsp&nbsp
+                                                <div>
+                                                     <label for="id_year" class=" requiredField">Año</label>
+                                                     <input type="number" placeholder="Año" name="year" min="0" class="numberinput form-control" required="" id="id_year" style="width: 80px">
+                                                </div>
+                                                <div class="col-xl-5 col-lg-5 col-md-5 col-sm-8">
+                                                     <label for="id_tribunal" class=" requiredField">Tribunal</label>
+                                                        <select name="tribunal" data-title="Tribunal" class="form-control selectpicker" required="" id="id_tribunal" data-live-search="true" style="width: 50%">
+                                                            {% for t in tribs %}
+                                                                 <option value="{{t.pk}}">{{t}}</option>
+                                                            {% endfor %}
+                                                        </select>
+                                                </div>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+                                                <div><br>
+                                                    <div class="form-group align-bottom">
+                                                          <button class="btn btn-outline-info" type="submit">Seguir Causa</button>
+                                                    </div>
+                                                </div>
+                                         </div>
+                                      </fieldset>
+                                  </form>
+                            </div><br>
+                            <div class="row mx-auto justify-content-center border-top mb-12">
+                                <h5><br>Ultimas causas en iniciar seguimiento</h5><br>
+                            </div><br>
+                            <div class="table-wrapper-scroll-y my-custom-scrollbar5 col-xl-10 col-lg-11 col-md-12 col-sm-12 mx-auto">
+                                    <table class="table table-striped table-light table-hover table-bordered mb-0" id="tabla" style="line-height:0.5">
+                                        <thead class="thead-dark sticky">
+                                            <tr>
+                                                <th style="width: 1px"><a class="text-truncate text-light align-middle" data-toggle="tooltip" data-placement="top" title="Causa">Causa</a></th>
+                                                <th style="width: 1px"><a class="text-truncate text-light align-middle" data-toggle="tooltip" data-placement="top" title="Fecha que comenzó a seguir la causa">Fecha inicio seguimiento</a></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="myTable">
+                                            {% for ca in miscasos %}
+                                                <tr>
+                                                   <td><a class="text-truncate align-middle text-dark" data-toggle="tooltip" data-placement="top" title="Causa">{{ ca.caso }}</a></td>
+                                                   <td><a class="text-truncate align-middle text-dark" data-toggle="tooltip" data-placement="top" title="Fecha que comenzó a seguir la causa">{{ ca.fecha_inicio|date:'d-m-Y' }}</a></td>
+                                                </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                            </div>
+
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+{% endblock %}
+

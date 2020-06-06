@@ -1,0 +1,331 @@
+{% extends 'casos/base.html' %}
+{% block title %}Gestión{% endblock %}
+{% block head %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script>
+    $(document).ready(function(){
+      $('[data-toggle="tooltip"]').tooltip();
+    });
+</script>
+{% endblock %}
+
+{% block content %}
+
+{% if user.is_authenticated %}
+        <br>
+        <!--  conteiner desde p3 hace q el fondo sea gris-->
+     <div class="row ">
+        <div class="container-fluid text-left p-3 my-3 bg-dark text-white rounded-lg border border-info col-xl-10 col-lg-10 col-md-11 col-sm-11 col-11 mx-auto">
+            <!--  esta es la parte de los inputs para filtrosdesde p3 hace q el fondo sea gris-->
+            <div class="row text-white">
+                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mx-auto text-center form p-2">
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                             <div class="row mx-auto justify-content-center border-bottom mb-12">
+                                 <h5><span class="text-truncate" aria-hidden="true">&nbsp&nbspGestión</span></h5>
+                             </div><br>
+                             <!--grafico de nuemro -->
+                             <div class="table-wrapper-scroll-y my-custom-scrollbarWW">
+                                 <div class="container">
+                                     <div class="row my-2">
+                                            <div class="col-xl-11 col-lg-12 col-md-11 col-sm-12 col-12 mx-auto">
+                                                <div class="card body" style="background-color: black">
+                                                    <div class="card-body" style="background-color: black">
+                                                        <canvas class="mx-auto" id="myChart" height="100"></canvas>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                     </div>
+                                 </div>
+                                 <div class="container">
+                                     <div class="row my-2">
+                                            <div class="col-xl-11 col-lg-12 col-md-11 col-sm-12 col-12 mx-auto">
+                                                <div class="card body" style="background-color: black">
+                                                    <div class="card-body" style="background-color: black">
+                                                        <canvas class="mx-auto" id="myChartCausas" height="100"></canvas>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                     </div>
+                                 </div>
+                                 <div class="container">
+                                     <div class="row my-2">
+                                            <div class="col-xl-11 col-lg-12 col-md-11 col-sm-12 col-12 mx-auto">
+                                                <div class="card body" style="background-color: black">
+                                                    <div class="card-body" style="background-color: black">
+                                                        <canvas class="mx-auto" id="myChartAct" height="100"></canvas>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                     </div>
+                                 </div>
+                                 <div class="container">
+                                     <div class="row my-2">
+                                            <div class="col-xl-11 col-lg-12 col-md-11 col-sm-12 col-12 mx-auto">
+                                                <div class="card body" style="background-color: black">
+                                                    <div class="card-body" style="background-color: black">
+                                                        <canvas class="mx-auto" id="myChartTar" height="100"></canvas>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                     </div>
+                                 </div>
+                             </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+     </div>
+
+
+<script>
+    var ctx = document.getElementById('myChart').getContext('2d');
+    Chart.defaults.global.defaultFontColor = "#fff";
+    var chart = new Chart(ctx, {
+        // The type of chart we want to create
+        type: 'horizontalBar',
+        // The data for our dataset
+        data: {
+            labels: ['Causas', 'Actualizaciones', 'Tareas'],
+            datasets: [{
+                backgroundColor: 'rgb(0,198,214)',
+                borderColor: 'rgb(0,198,214)',
+                order: 0,
+                data: [{{ mis_casos }} , {{ con_est }}  , {{ con_ta }} ]
+            }]
+        },
+        // Configuration options go here
+       options: {
+          legend: {
+                display: false
+            },
+          tooltips: {
+                callbacks: {
+                   label: function(tooltipItem) {
+                          return tooltipItem.yLabel;
+                   }
+                }
+            },
+          scales: {
+            xAxes: [{
+              ticks: {
+                beginAtZero: true,
+                min: 0
+              },
+              gridLines: {
+                  display: true ,
+                  color: "#FFFFFF"
+             },
+             }]
+             },
+            title: {
+                display: true,
+                fontColor: "#FFFFFF",
+                fontSize: 16,
+                text: 'Causas activas, actualizaciones y tareas pendientes'
+            }
+            },
+    });
+</script>
+<script>
+    var ctx = document.getElementById('myChartCausas').getContext('2d');
+    Chart.defaults.global.defaultFontColor = "#fff";
+    var chart = new Chart(ctx, {
+        // The type of chart we want to create
+        type: 'line',
+        // The data for our dataset
+        data: {
+            labels: ['{{mes2}}', '{{mes1}}', '{{ mes0 }}'],
+            datasets: [
+                {
+                borderColor: 'rgb(200,198,10)',
+                order: 0,
+                data: [{{ca_in_2}}, {{ca_in_1}}, {{ca_in_0}}]
+            },
+            {
+                borderColor: 'rgb(12,124,17)',
+                order: 0,
+                data: [{{ca_fi_2}}, {{ca_fi_1}}, {{ca_fi_0}}]
+            },
+            ]
+        },
+        // Configuration options go here
+       options: {
+          legend: {
+                display: false
+            },
+            tooltips: {
+                callbacks: {
+                   label: function(tooltipItem) {
+                          return tooltipItem.yLabel;
+                   }
+                }
+            },
+          scales: {
+            yAxes: [{
+              ticks: {
+                beginAtZero: true,
+                min: 0
+              },
+              gridLines: {
+                  display: true ,
+                  color: "#FFFFFF"
+            },
+            }],
+            xAxes: [{
+              ticks: {
+                beginAtZero: true,
+                min: 0
+              },
+              gridLines: {
+                  display: true ,
+                  color: "#FFFFFF"
+            },
+            }],
+          },
+           title: {
+                display: true,
+                fontColor: "#FFFFFF",
+                fontSize: 16,
+                text: 'Causas ingresadas VS finalizadas'
+            }
+        }
+    });
+</script>
+<script>
+var ctx = document.getElementById('myChartAct').getContext('2d');
+Chart.defaults.global.defaultFontColor = "#fff";
+var chart = new Chart(ctx, {
+    // The type of chart we want to create
+    type: 'line',
+    // The data for our dataset
+    data: {
+        labels: ['{{mes2}}', '{{mes1}}', '{{ mes0 }}'],
+        datasets: [
+            {
+            borderColor: 'rgb(200,198,15)',
+            order: 0,
+            data: [{{ac_in_2}}, {{ac_in_1}}, {{ac_in_0}}]
+        },
+        {
+            borderColor: 'rgb(12,124,17)',
+            order: 0,
+            data: [{{ac_fi_2}}, {{ac_fi_1}}, {{ac_fi_0}}]
+        },
+        ]
+    },
+    // Configuration options go here
+   options: {
+      legend: {
+            display: false
+        },
+        tooltips: {
+            callbacks: {
+               label: function(tooltipItem) {
+                      return tooltipItem.yLabel;
+               }
+            }
+        },
+      scales: {
+        yAxes: [{
+          ticks: {
+            beginAtZero: true,
+            min: 0
+          },
+          gridLines: {
+              display: true ,
+              color: "#FFFFFF"
+        },
+        }],
+        xAxes: [{
+          ticks: {
+            beginAtZero: true,
+            min: 0
+          },
+          gridLines: {
+              display: true ,
+              color: "#FFFFFF"
+        },
+        }],
+      },
+       title: {
+            display: true,
+            fontColor: "#FFFFFF",
+            fontSize: 16,
+            text: 'Actualizaciones ingresadas VS finalizadas'
+        }
+    }
+});
+</script>
+<script>
+var ctx = document.getElementById('myChartTar').getContext('2d');
+Chart.defaults.global.defaultFontColor = "#fff";
+var chart = new Chart(ctx, {
+    // The type of chart we want to create
+    type: 'line',
+    // The data for our dataset
+    data: {
+        labels: ['{{mes2}}', '{{mes1}}', '{{ mes0 }}'],
+        datasets: [
+            {
+            borderColor: 'rgb(200,198,15)',
+            order: 0,
+            data: [{{ta_in_2}}, {{ta_in_1}}, {{ta_in_0}}]
+        },
+        {
+            borderColor: 'rgb(12,124,17)',
+            order: 0,
+            data: [{{ta_fi_2}}, {{ta_fi_1}}, {{ta_fi_0}}]
+        },
+        ]
+    },
+    // Configuration options go here
+   options: {
+      legend: {
+            display: false
+        },
+        tooltips: {
+            callbacks: {
+               label: function(tooltipItem) {
+                      return tooltipItem.yLabel;
+               }
+            }
+        },
+      scales: {
+        yAxes: [{
+          ticks: {
+            beginAtZero: true,
+            min: 0
+          },
+          gridLines: {
+              display: true ,
+              color: "#FFFFFF"
+        },
+        }],
+        xAxes: [{
+          ticks: {
+            beginAtZero: true,
+            min: 0
+          },
+          gridLines: {
+              display: true ,
+              color: "#FFFFFF"
+        },
+        }],
+      },
+       title: {
+            display: true,
+            fontColor: "#FFFFFF",
+            fontSize: 16,
+            text: 'Tareas ingresadas VS finalizadas'
+        }
+    }
+});
+</script>
+
+{% endif %}
+
+
+{% endblock %}
