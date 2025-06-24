@@ -1,69 +1,45 @@
-ParalegApp – Automated Legal Case Tracking Platform
-ParalegApp is a Django-powered web platform that automates daily monitoring of legal cases, helping attorneys track changes in court proceedings through smart alerts and collaborative tools.
+# ParalegApp – Automated Legal Case Tracking Platform
 
-Lawyers don’t always receive official updates when there’s a court change. ParalegApp ensures they never miss critical developments by scanning court websites daily and sending alerts for meaningful updates.
+**ParalegApp** is a Django-powered web platform that automates daily monitoring of legal cases, helping attorneys track changes in court proceedings through smart alerts and collaborative tools.
 
-🚀 Core Functionality
-User registration and authentication – lawyers can securely log in.
+In Chile (and many other countries), courts don't notify lawyers of case updates. ParalegApp scans court websites daily and alerts lawyers to new filings, rulings, or procedural changes.
 
-Case management – add cases to track and view status updates.
+## Features
 
-Automated web scraping – daily checks for changes in case records on court portals.
+- Secure user registration and login
+- Add and manage legal cases for tracking
+- Automatic daily web scraping of court portals
+- Email notifications on case updates
+- Dashboard with change history and timeline
+- Case sharing and collaborative task assignment
 
-Smart email alerts – notifies users of new court decisions, filings, or status updates.
+## Tech Stack
 
-Dashboard with change history – view case timelines and update summaries in the app.
+- Python 3
+- Django
+- Requests / BeautifulSoup for web scraping
+- PostgreSQL / SQLite
+- SMTP for email delivery
+- Bootstrap for frontend
 
-Collaboration between lawyers – share cases, assign tasks, and jointly manage workflows.
+## Why It Matters
 
-🧱 Project Structure
-'''
-graphql
-Copiar
-ParalegApp/
-├── app/                      # Django models: users, cases, tasks, collaborations
-├── templates/                # HTML templates for case dashboard and email notifications
-├── webscrap/                # Daily scraper module for court websites
-├── notifications/           # Email handling logic and alerts
-├── static/                  # CSS, JS, static assets
-├── settings/                # Django configuration
-└── manage.py                # Django admin & custom commands
-'''
+Lawyers often miss important updates because there is no automated way to track changes on judicial websites. ParalegApp:
 
-🔧 Tech Stack
-Python 3
+- Saves time by eliminating manual review  
+- Prevents missed deadlines and filings  
+- Improves collaboration within legal teams  
 
-Django (web, ORM, users)
+## Developer Notes
 
-Requests / BeautifulSoup (web scraping)
+- Full-stack implementation: models, views, scraping, notifications, and templates
+- Uses Django ORM and custom commands for background automation
+- Designed for real-world legal workflows
+- Smart notifications based on actual case changes
 
-PostgreSQL / SQLite (persistent storage)
+## Status
 
-SMTP email delivery
+- Fully working MVP
+- Not commercialized (lacked a business partner for go-to-market)
+- Potential improvements: OAuth login, responsive design, broader court integration
 
-Bootstrap (basic UI)
-
-💡 Why It Matters
-Lawyers in Chile (and many jurisdictions) have to manually review court websites daily to catch updates. ParalegApp allows them to:
-
-Save time and stay compliant by automating monitoring
-
-Never miss deadlines triggered by court filings
-
-Collaborate efficiently with colleagues on shared cases
-
-🧠 Your Role & Achievements
-Full-stack development: designed models, views, templates, and scraping logic
-
-Automation: built custom Django commands and scheduling for daily scraping
-
-User-centric design: created intuitive dashboards for case tracking and updates
-
-Email integration: automatic notifications for real-world users
-
-⚠️ Project Status
-🟢 Functionally complete – all core features are implemented
-
-⚠️ Not yet commercialized due to lack of marketing and sales partnership
-
-🔧 Potential improvements: OAuth login, mobile-friendly UI, and broader case-sharing features# paralegapp
